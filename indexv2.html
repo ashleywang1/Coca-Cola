@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+  <head>
+    <meta charset="utf-8">
+        <title>Bars</title>
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link href="js/vendor/src/nv.d3.css" rel="stylesheet" type="text/css">
+        <script type="text/Javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+
+  </head>
+
+
+<body>
+
+  <style type="text/css">
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  position: relative;
+  width: 960px;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+
+.x.axis path {
+  display: none;
+}
+
+label {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: none;
+}
+
+.circle {
+  fill: blue;
+  stroke-width: 1.5px;
+}
+
+</style>
+<label><input type="checkbox"> Sort values</label>
+
+
+
+
+<script src="http://d3js.org/d3.v2.min.js?2.10.1"></script>
+<script>
+
+var margin = {top: 20, right: 20, bottom: 30, left: 140},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var formatPercent = d3.format(".0%");
+
+var x = d3.scale.ordinal()
+    .rangeBands([0, width], 0);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+//Is there any way to make this have .letter and .frequency attrs?
+//Creating data randomly?
+
+var data = [["Coke", 50], ["Pepsi", 20], ["Mountain Dew", 20], ["Red Bull", 20], ["Dasani", 60], ["Gatorade", 20], ["Tropicana", 30], ["test", 80]];
+
+//This is where the scales are set
+  x.domain(data.map(function(d) { return d[0]; }));
+  y.domain([0, 100]);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")  
+      .call(xAxis)
+      .append("text")
+      .text("Types of Soda")
+      .attr("x", 290)
+      .attr("y", 70)
+      .style("text-anchor", "middle")
+      .style("font-size", "40px");
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("x", -30)
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .style("font-size", "14px")
+      .text("Gallons");
+
+
+	var i = 0;
+	var smallbars = [];
+	while (i < data.length) {
+		smallbars.push(createincrements(data[i], i));
+		i++;
+	}
+
+    function createincrements(drinkbar, num) {
+    	var name = drinkbar[0];
+    	var h = drinkbar[1];
+    	var increments = d3.range(0, h/10, 1)
+
+    	svg.selectAll(".bar")
+        .data(increments)
+      .enter().append("rect")
+        .attr("class", function(d, i) {return name + " " + "bar" + i;})
+        .attr("x", num*width/data.length + 30)
+        .attr("width", 50)
+        .attr("y", 0)
+        .attr("height", 0);
+
+        return h/10;
+    }
+    
+
+    var i = 0;
+	while (i < d3.max(smallbars, function(d) {return d;})) {
+		dropincrements(smallbars[i], i);
+		i++;
+	}
+
+    function dropincrements(rate, i) {
+	    d3.select("body").selectAll(".bar" + i).transition()
+	      .delay(i*300)
+	      .duration(500)
+	      .attr("y", height - i*50 - 50)
+	      .attr("height", 50);    	
+    }
+
+
+
+      //select the bar that you're working on
+
+      //find the height
+
+      //build up to that height in increments
+        //decide on the increment
+        //drop the increment down
+        //fix it to that position
+        //drop the next one on top of it
+        //repeat until you're done
+
+  </script>

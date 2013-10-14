@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+
+  <head>
+    <meta charset="utf-8">
+        <title>Bars</title>
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link href="js/vendor/src/nv.d3.css" rel="stylesheet" type="text/css">
+        <script type="text/Javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+
+  </head>
+
+
+<body>
+
+  <style type="text/css">
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  position: relative;
+  width: 960px;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: blue;
+  fill-opacity: .9;
+}
+
+.x.axis path {
+  display: none;
+}
+
+label {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: none;
+}
+
+.circle {
+  fill: blue;
+  stroke-width: 1.5px;
+}
+
+</style>
+<label><input type="checkbox"> Sort values</label>
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="http://d3js.org/d3.v2.min.js?2.10.1"></script>
+<script>
+
+var margin = {top: 20, right: 20, bottom: 30, left: 140},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var formatPercent = d3.format(".0%");
+
+var x = d3.scale.ordinal()
+    .rangeBands([0, width], 0);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+//Is there any way to make this have .letter and .frequency attrs?
+//Creating data randomly?
+
+var data = [["Coke", 50], ["Pepsi", 20], ["Mountain Dew", 20], ["Something", 20], ["A", 20], ["B", 20], ["C", 20]];
+
+//This is where the scales are set
+  x.domain(data.map(function(d) { return d[0]; }));
+  y.domain([0, 100]);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")  
+      .call(xAxis)
+      .append("text")
+      .text("Types of Soda")
+      .attr("x", 290)
+      .attr("y", 70)
+      .style("text-anchor", "middle")
+      .style("font-size", "40px");
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("x", -30)
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .style("font-size", "14px")
+      .text("Gallons");
+
+    svg.selectAll(".bar")
+        .data(data)
+      .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d, i) { return i*width/data.length + 30; })
+        .attr("width", 50)
+        .attr("y", 0)
+        .attr("height", 1);
+
+
+    svg.selectAll(".bar1")
+        .data(data)
+      .enter().append("rect")
+        .attr("class", "bar1")
+        .attr("x", function(d, i) { return i*width/data.length + 30; })
+        .attr("width", 50)
+        .attr("y", 0)
+        .attr("height", 1);
+
+
+
+
+
+var data = [["Coke", 50], ["Pepsi", 20], ["Mountain Dew", 20], ["Something", 20], ["A", 20], ["B", 20], ["C", 20]];
+
+
+    d3.select("body").selectAll(".bar").transition()
+      .delay(100)
+      .duration(550)
+      .attr("y", function(d) {return height - d[1];})
+      .attr("height", function(d) {return d[1];});
+
+    d3.select("body").selectAll(".bar1").transition()
+      .delay(650)
+      .duration(550)
+      .attr("y", function(d) {return height - 2*d[1];})
+      .attr("height", function(d) {return d[1];});
+
+
+      //select the bar tht you're working on
+
+      //find the height
+
+      //build up to that height in increments
+        //decide on the increment
+        //drop the increment down
+        //fix it to that position
+        //drop the next one on top of it
+        //repeat until you're done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//idea - since it's pouring drinks, you could animate little dots and let them fall into the bar graph instead of having blocks fall straignt down - use the force method? Particle in d3 examples?
+
+//    d3.select("input").on("change", change);
+
+//    var sortTimeout = setTimeout(function() {
+//      d3.select("input").property("checked", true).each(change);
+//    }, 2000);
+
+//NOTE CALL THIS LATER THIS IS TEMPORARY    d3.select("body").call(change);
+
+    function change() {
+//      clearTimeout(sortTimeout);
+
+      // Copy-on-write since tweens are evaluated after a delay.
+      var y0 = y.domain([0, 100]);
+
+
+      var transition = svg.transition().duration(750),
+          delay = function(d, i) { return 30; };
+
+      transition.selectAll(".bar")
+          .delay(delay)
+          .attr("y", function(d, i) {return 430 - (d[1]);})
+          .attr("height", function(d, i) { return d[1]; });
+
+      transition.select(".y.axis")
+          .call(yAxis)
+        .selectAll("g")
+          .delay(delay);
+
+
+    };
+
+
+//NOTE ALSO CALL THIS LATER THIS IS ALSO TEMPORARY    d3.select("body").call(buildbar);
+
+    //This is where I'ma try to build one bar in a certain amount of time
+    function buildbar() {
+
+      var transition = svg.transition().duration(550),
+          delay = function(d, i) { return 950; };
+
+
+      transition.selectAll("bar")
+          .delay(delay)
+          .attr("y", function(d, i) {return (d[1]);})
+          .attr("height", function(d, i) { return d[1]; });
+
+      d3.select("body").append("p");
+
+      var tall = data[0][1];
+
+    };
+
+
+
+    function add() {
+      d3.select("body")
+      .append("p")
+      .text("yay");
+    };
+
+
+//    d3.csv("test.csv", type, function(error, data) {
+//      d3.select("body")
+//        .append("p")
+//        .text("yay");
+//    });
+//
+//    function type(d) {
+//  
+//  return d;
+//   }
+
+  </script>
